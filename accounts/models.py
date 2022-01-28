@@ -8,18 +8,18 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 class UserManager(BaseUserManager):
     
-    def create_user(self, username, email, first_name, last_name, password=None):
+    def create_user(self, username, email, password=None):
         
         if username is None:
             raise TypeError('Username is required')
         if email is None:
             raise TypeError('Email is required')
-        if first_name is None:
+        """if first_name is None:
             raise TypeError('Firstname is required')
         if last_name is None:
-            raise TypeError('Lastname is required')
+            raise TypeError('Lastname is required')"""
         
-        user = self.model(username=username, first_name=first_name, last_name=last_name, email=self.normalize_email(email))
+        user = self.model(username=username, email=self.normalize_email(email))
         user.set_password(password)
         user.save()
         return user
@@ -38,8 +38,6 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=250, unique=True, db_index=True)
     email = models.EmailField(max_length=250, unique=True, db_index=True)
-    first_name = models.CharField(max_length=250)
-    last_name = models.CharField(max_length=250)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
